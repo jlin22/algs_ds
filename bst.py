@@ -1,64 +1,45 @@
+class Node:
+    left = None
+    right = None
+    parent = None     
+
+    def __init__(self, value):
+        self.value = value
+
+def insert_helper(node, prev, key):
+    if node == None: 
+        if key < prev.value:
+            prev.left = Node(key)
+        else:
+            prev.right = Node(key)
+    else:
+        if key < node.value:
+            insert_helper(node.left, node, key)
+        else:
+            insert_helper(node.right, node, key)
+    
+def inorder_helper(node):
+    if node != None:
+        inorder_helper(node.left)
+        print(node.value)
+        inorder_helper(node.right)
+
 class BinarySearchTree:
     def __init__(self):
-        self.value = None
-        self.left = None
-        self.right = None
+        self.root = None
 
-    def search(self, key):
-        if not self.value: return None
-        if self.value == key: return self
-        elif self.value < key: 
-            if not self.right: return None
-            return self.right.search(key)
+    def insert(self, value):
+        if self.root == None:
+            self.root = Node(value)
         else:
-            if not self.left: return None
-            return self.left.search(key)
+            insert_helper(self.root, None, value)
 
-    def find_min(self):
-        if not self.value: return None
-        min_tree = self
-        while min_tree.left:
-            min_tree = min_tree.left
-        return min_tree
-
-    def find_max(self):
-        if not self.value: return None
-        max_tree = self
-        while max_tree.right:
-            max_tree = max_tree.right
-        return max_tree
-
-    def traverse_tree(self):
-        if self:
-            self.left.traverse_tree()
-            print(self.value)
-            self.right.traverse_tree()
-
-    def insert(self, key):
-        if not self.value: 
-            self.value = key
-            return
-        elif key <= self.value:
-            if not self.right:
-                self.right = BinarySearchTree()
-                self.right.value = key
-                return
-            else: self.right.insert(key)
-        else:
-            if not self.left:
-                self.left = BinarySearchTree()
-                self.left.value = key
-                return
-            else: self.left.insert(key)
-        
+    def inorder(self):
+        inorder_helper(self.root)
 
 bst = BinarySearchTree()
 for i in range(10):
     bst.insert(i)
-print(bst.search(5))
-print(bst.find_min().value)
-print(bst.find_max().value)
-bst.traverse_tree()
-
-
-        
+bst.insert(-1)
+bst.insert(-3)
+bst.inorder()
